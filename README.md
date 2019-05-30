@@ -32,7 +32,7 @@ Recommended way to install Phystrix is by using [Composer](https://getcomposer.o
 
 ```json
   "require": {
-     "yupmin/modern-phystrix": "dev-master"
+     "yupmin/modern-phystrix": "~3.0"
   },
 
 ```
