@@ -17,5 +17,5 @@ matrix:
   fast_finish: true
 
 script:
-  - ./vendor/phpunit/phpunit/phpunit --stderr
-  - phpcs
+  - ./vendor/bin/phpunit --stderr
+  - ./vendor/bin/phpcs
