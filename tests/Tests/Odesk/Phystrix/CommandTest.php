@@ -321,7 +321,9 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         try {
             $this->command->execute();
             $this->fail('Exception expected');
-        } catch (Exception $exception) {}
+        } catch (Exception $exception) {
+            //
+        }
         $this->assertInstanceOf('Odesk\Phystrix\Exception\RuntimeException', $exception);
         $this->assertEquals('could not run and failed retrieving fallback', $exception->getMessage());
         $this->assertEquals(
@@ -413,7 +415,9 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         try {
             $this->command->execute();
             $this->fail('Exception expected');
-        } catch (Exception $exception) {}
+        } catch (Exception $exception) {
+            //
+        }
         $this->assertInstanceOf('Odesk\Phystrix\Exception\RuntimeException', $exception);
         $this->assertEquals('could not run and fallback disabled', $exception->getMessage());
         $this->assertEquals(

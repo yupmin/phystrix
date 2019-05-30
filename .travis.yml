@@ -16,4 +16,6 @@ matrix:
     - php: hhvm
   fast_finish: true
 
-script: ./vendor/phpunit/phpunit/phpunit --stderr
+script:
+  - ./vendor/phpunit/phpunit/phpunit --stderr
+  - phpcs

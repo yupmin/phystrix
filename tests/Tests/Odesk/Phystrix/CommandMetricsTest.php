@@ -112,7 +112,7 @@ class CommandMetricsTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValueMap(array(
                 array(MetricsCounter::FAILURE, 22),
                 array(MetricsCounter::SUCCESS, 33),
-        )));
+            )));
 
         $snapshot = $this->metrics->getHealthCounts();
         $this->assertEquals(22, $snapshot->getFailure());
@@ -155,7 +155,7 @@ class CommandMetricsTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValueMap(array(
                 array(MetricsCounter::FAILURE, 22),
                 array(MetricsCounter::SUCCESS, 33),
-        )));
+            )));
 
         $newSnapshot = $this->metrics->getHealthCounts();
         $this->assertNotEquals($snapshot, $newSnapshot);

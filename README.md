@@ -1,6 +1,6 @@
 # Modern Phystrix
 
-[![Build Status](https://travis-ci.org/yupmin/modern-phystrix.svg)](https://travis-ci.org/yupmin/modern-phystrix)
+[![Build Status](https://travis-ci.org/yupmin/phystrix.svg)](https://travis-ci.org/yupmin/phystrix)
 
 ## Requirement
 * PHP 5.6 above
@@ -18,6 +18,7 @@ And I fixed more for Modern PHP
 * Use PHP 5.6 above
 * Deleted 'Zend DI' and User 'PSR DI'
 * DI is optional. (for using Your framework)
+* PSR2 is default.
 
 ### Understanding Phystrix
 

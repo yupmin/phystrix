@@ -62,12 +62,15 @@ class RequestLog
      * TestCommand[THREAD_POOL_REJECTED][1ms]
      * TestCommand[THREAD_POOL_REJECTED, FALLBACK_SUCCESS][1ms]
      * TestCommand[FAILURE, FALLBACK_SUCCESS][1ms], TestCommand[FAILURE, FALLBACK_SUCCESS, RESPONSE_FROM_CACHE][1ms]x4
-     * GetData[SUCCESS][1ms], PutData[SUCCESS][1ms], GetValues[SUCCESS][1ms], GetValues[SUCCESS, RESPONSE_FROM_CACHE][1ms], TestCommand[FAILURE, FALLBACK_FAILURE][1ms], TestCommand[FAILURE,
+     * GetData[SUCCESS][1ms], PutData[SUCCESS][1ms], GetValues[SUCCESS][1ms], GetValues[SUCCESS,
+     *     RESPONSE_FROM_CACHE][1ms], TestCommand[FAILURE, FALLBACK_FAILURE][1ms], TestCommand[FAILURE,
      * FALLBACK_FAILURE, RESPONSE_FROM_CACHE][1ms]
      *
-     * If a command has a multiplier such as <code>x4</code>, that means this command was executed 4 times with the same events. The time in milliseconds is the sum of the 4 executions.
+     * If a command has a multiplier such as <code>x4</code>, that means this command was executed 4 times with
+     *     the same events. The time in milliseconds is the sum of the 4 executions.
      *
-     * For example, <code>TestCommand[SUCCESS][15ms]x4</code> represents TestCommand being executed 4 times and the sum of those 4 executions was 15ms. These 4 each executed the run() method since
+     * For example, <code>TestCommand[SUCCESS][15ms]x4</code> represents TestCommand being executed 4 times and
+     *     the sum of those 4 executions was 15ms. These 4 each executed the run() method since
      * <code>RESPONSE_FROM_CACHE</code> was not present as an event.
      *
      * @return string request log
@@ -87,7 +90,8 @@ class RequestLog
                 $aggregatedCommandsExecuted[$outputForExecutedCommand] = 0;
             }
 
-            $aggregatedCommandsExecuted[$outputForExecutedCommand] = $aggregatedCommandsExecuted[$outputForExecutedCommand] + 1;
+            $aggregatedCommandsExecuted[$outputForExecutedCommand]
+                = $aggregatedCommandsExecuted[$outputForExecutedCommand] + 1;
 
             $executionTime = $executedCommand->getExecutionTimeInMilliseconds();
 
@@ -96,7 +100,8 @@ class RequestLog
             }
 
             if (isset($aggregatedCommandExecutionTime[$outputForExecutedCommand]) && $executionTime > 0) {
-                $aggregatedCommandExecutionTime[$outputForExecutedCommand] = $aggregatedCommandExecutionTime[$outputForExecutedCommand] + $executionTime;
+                $aggregatedCommandExecutionTime[$outputForExecutedCommand]
+                    = $aggregatedCommandExecutionTime[$outputForExecutedCommand] + $executionTime;
             } else {
                 $aggregatedCommandExecutionTime[$outputForExecutedCommand] = $executionTime;
             }
