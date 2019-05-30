@@ -41,8 +41,8 @@ class CircuitBreakerFactoryTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->factory = new CircuitBreakerFactory($this->getMock('Odesk\Phystrix\StateStorageInterface'));
-        $this->metrics = $this->getMock('Odesk\Phystrix\CommandMetrics', array(), array(), '', false);
+        $this->factory = new CircuitBreakerFactory($this->createMock('Odesk\Phystrix\StateStorageInterface'));
+        $this->metrics = $this->createMock('Odesk\Phystrix\CommandMetrics', array(), array(), '', false);
     }
 
     public function testGetNoOpCircuitBreaker()

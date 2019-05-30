@@ -34,7 +34,7 @@ class MetricsCounterTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->stateStorageMock = $this->getMock('Odesk\Phystrix\StateStorageInterface');
+        $this->stateStorageMock = $this->createMock('Odesk\Phystrix\StateStorageInterface');
         // 10 seconds statistical window, 10 buckets.
         $this->counter = new MetricsCounter('TestCommand', $this->stateStorageMock, 10000, 10);
         // microtime is fixed

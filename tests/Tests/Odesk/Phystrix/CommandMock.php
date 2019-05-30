@@ -18,6 +18,7 @@
  */
 namespace Tests\Odesk\Phystrix;
 
+use DomainException;
 use Odesk\Phystrix\AbstractCommand;
 use Odesk\Phystrix\Exception\BadRequestException;
 
@@ -43,7 +44,7 @@ class CommandMock extends AbstractCommand
         if ($this->throwBadRequestException) {
             throw new BadRequestException('special treatment');
         } elseif ($this->throwException) {
-            throw new \DomainException('could not run');
+            throw new DomainException('could not run');
         } else {
             return 'run result';
         }
@@ -52,7 +53,7 @@ class CommandMock extends AbstractCommand
     protected function getFallback(\Exception $e = null)
     {
         if ($this->throwExceptionInFallback) {
-            throw new \DomainException('error falling back');
+            throw new DomainException('error falling back');
         } else {
             return 'fallback result';
         }

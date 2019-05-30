@@ -33,6 +33,7 @@ class ApcStateStorage implements StateStorageInterface
 
     /**
      * Constructor
+     * @throws Exception\ApcNotLoadedException
      */
     public function __construct()
     {
@@ -85,7 +86,7 @@ class ApcStateStorage implements StateStorageInterface
      * If the given bucket is found, sets counter value to 0.
      *
      * @param string $commandKey Circuit breaker key
-     * @param integer $type
+     * @param string $type
      * @param integer $index
      */
     public function resetBucket($commandKey, $type, $index)

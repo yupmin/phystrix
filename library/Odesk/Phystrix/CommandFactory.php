@@ -19,8 +19,9 @@
 namespace Odesk\Phystrix;
 
 use ReflectionClass;
+use ReflectionException;
+use Psr\Container\ContainerInterface;
 use Zend\Config\Config;
-use Zend\Di\LocatorInterface;
 
 /**
  * All commands must be created through this factory.
@@ -34,9 +35,9 @@ class CommandFactory
     protected $config;
 
     /**
-     * @var LocatorInterface
+     * @var ContainerInterface
      */
-    protected $serviceLocator;
+    protected $container;
 
     /**
      * @var CircuitBreakerFactory
@@ -67,21 +68,22 @@ class CommandFactory
      * @param CommandMetricsFactory $commandMetricsFactory
      * @param RequestCache $requestCache
      * @param RequestLog $requestLog
+     * @param ContainerInterface $container
      */
     public function __construct(
         Config $config,
-        LocatorInterface $serviceLocator,
         CircuitBreakerFactory $circuitBreakerFactory,
         CommandMetricsFactory $commandMetricsFactory,
         RequestCache $requestCache = null,
-        RequestLog $requestLog = null
+        RequestLog $requestLog = null,
+        ContainerInterface $container = null
     ) {
-        $this->serviceLocator = $serviceLocator;
         $this->config = $config;
         $this->circuitBreakerFactory = $circuitBreakerFactory;
         $this->commandMetricsFactory = $commandMetricsFactory;
         $this->requestCache = $requestCache;
         $this->requestLog = $requestLog;
+        $this->container = $container;
     }
 
     /**
@@ -89,6 +91,7 @@ class CommandFactory
      *
      * @param string $class
      * @return AbstractCommand
+     * @throws ReflectionException
      */
     public function getCommand($class)
     {
@@ -103,7 +106,7 @@ class CommandFactory
 
         $command->setCircuitBreakerFactory($this->circuitBreakerFactory);
         $command->setCommandMetricsFactory($this->commandMetricsFactory);
-        $command->setServiceLocator($this->serviceLocator);
+        $command->setContainer($this->container);
         $command->initializeConfig($this->config);
 
         if ($this->requestCache) {

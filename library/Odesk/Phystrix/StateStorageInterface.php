@@ -27,7 +27,7 @@ interface StateStorageInterface
      * Increments counter value for the given bucket
      *
      * @param string $commandKey
-     * @param integer $type
+     * @param string $type
      * @param integer $index
      */
     public function incrementBucket($commandKey, $type, $index);
@@ -36,7 +36,7 @@ interface StateStorageInterface
      * Returns counter value for the given bucket
      *
      * @param string $commandKey
-     * @param integer $type
+     * @param string $type
      * @param integer $index
      * @return integer
      */
@@ -78,7 +78,7 @@ interface StateStorageInterface
      * If the given bucket is found, sets counter value to 0.
      *
      * @param string $commandKey Circuit breaker key
-     * @param integer $type
+     * @param string $type
      * @param integer $index
      */
     public function resetBucket($commandKey, $type, $index);

@@ -75,7 +75,7 @@ class ArrayStateStorage implements StateStorageInterface
      * If the given bucket is found, sets counter value to 0.
      *
      * @param string $commandKey Circuit breaker key
-     * @param integer $type
+     * @param string $type
      * @param integer $index
      */
     public function resetBucket($commandKey, $type, $index)

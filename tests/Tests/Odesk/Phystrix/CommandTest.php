@@ -18,10 +18,13 @@
  */
 namespace Tests\Odesk\Phystrix;
 
+use DomainException;
+use Exception;
 use Odesk\Phystrix\AbstractCommand;
 use Odesk\Phystrix\Exception\RuntimeException;
 use Odesk\Phystrix\RequestCache;
 use Odesk\Phystrix\RequestLog;
+use ReflectionClass;
 use Zend\Config\Config;
 
 class CommandTest extends \PHPUnit_Framework_TestCase
@@ -59,12 +62,12 @@ class CommandTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->circuitBreakerFactory
-            = $this->getMock('Odesk\Phystrix\CircuitBreakerFactory', array(), array(), '', false);
+            = $this->createMock('Odesk\Phystrix\CircuitBreakerFactory', array(), array(), '', false);
         $this->circuitBreaker
-            = $this->getMock('Odesk\Phystrix\CircuitBreakerInterface', array(), array(), '', false);
+            = $this->createMock('Odesk\Phystrix\CircuitBreakerInterface', array(), array(), '', false);
         $this->commandMetricsFactory
-            = $this->getMock('Odesk\Phystrix\CommandMetricsFactory', array(), array(), '', false);
-        $this->commandMetrics = $this->getMock('Odesk\Phystrix\CommandMetrics', array(), array(), '', false);
+            = $this->createMock('Odesk\Phystrix\CommandMetricsFactory', array(), array(), '', false);
+        $this->commandMetrics = $this->createMock('Odesk\Phystrix\CommandMetrics', array(), array(), '', false);
 
         $this->command = new CommandMock();
         $this->command->setCommandMetricsFactory($this->commandMetricsFactory);
@@ -139,7 +142,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
             ->method('get')
             ->with('PresetTestCommandKey')
             ->will($this->returnValue($this->commandMetrics));
-        $reflection = new \ReflectionClass('Tests\Odesk\Phystrix\CommandMock');
+        $reflection = new ReflectionClass('Tests\Odesk\Phystrix\CommandMock');
         $property = $reflection->getProperty('commandKey');
         $property->setAccessible(true);
         $property->setValue($this->command, 'PresetTestCommandKey');
@@ -193,7 +196,8 @@ class CommandTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider configBoolProvider
      *
-     * @param bool $logEnabled  whether config is set to use request log
+     * @param bool $logEnabled whether config is set to use request log
+     * @throws Exception
      */
     public function testRequestLogNotInjected($logEnabled)
     {
@@ -219,7 +223,8 @@ class CommandTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider configBoolProvider
      *
-     * @param bool $cacheEnabled  whether config is set to use request log
+     * @param bool $cacheEnabled whether config is set to use request log
+     * @throws Exception
      */
     public function testRequestCacheNotInjected($cacheEnabled)
     {
@@ -252,6 +257,9 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @throws Exception
+     */
     public function testExecuteRequestNotAllowed()
     {
         $this->setUpCommonExpectations(false);
@@ -274,6 +282,9 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(null, $this->command->getExecutionTimeInMilliseconds());
     }
 
+    /**
+     * @throws Exception
+     */
     public function testExecuteRunException()
     {
         $this->setUpCommonExpectations();
@@ -291,7 +302,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
             $this->command->getExecutionEvents()
         );
         $this->assertEquals(555, $this->command->getExecutionTimeInMilliseconds());
-        $this->assertEquals(new \DomainException('could not run'), $this->command->getExecutionException());
+        $this->assertEquals(new DomainException('could not run'), $this->command->getExecutionException());
     }
 
     public function testExecuteFallbackFailed()
@@ -310,7 +321,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         try {
             $this->command->execute();
             $this->fail('Exception expected');
-        } catch (\Exception $exception) {}
+        } catch (Exception $exception) {}
         $this->assertInstanceOf('Odesk\Phystrix\Exception\RuntimeException', $exception);
         $this->assertEquals('could not run and failed retrieving fallback', $exception->getMessage());
         $this->assertEquals(
@@ -324,6 +335,9 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($exception->getPrevious(), $this->command->getExecutionException());
     }
 
+    /**
+     * @throws Exception
+     */
     public function testRuntimeExceptionPopulated()
     {
         $this->setUpCommonExpectations();
@@ -342,6 +356,9 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function testBadRequestExceptionTracksNoMetrics()
     {
         $this->setUpCommonExpectations();
@@ -354,7 +371,8 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         $this->commandMetrics->expects($this->never())
             ->method('markFailure');
         $this->command->throwBadRequestException = true;
-        $this->setExpectedException('Odesk\Phystrix\Exception\BadRequestException', 'special treatment');
+        $this->expectException('Odesk\Phystrix\Exception\BadRequestException');
+        $this->expectExceptionMessage('special treatment');
         $this->command->execute();
         // no events logged in this case
         $this->assertEquals(array(), $this->command->getExecutionEvents());
@@ -362,6 +380,9 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(null, $this->command->getExecutionTimeInMilliseconds());
     }
 
+    /**
+     * @throws Exception
+     */
     public function testShortCircuitedExceptionMessage()
     {
         $this->setUpCommonExpectations(false);
@@ -392,7 +413,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         try {
             $this->command->execute();
             $this->fail('Exception expected');
-        } catch (\Exception $exception) {}
+        } catch (Exception $exception) {}
         $this->assertInstanceOf('Odesk\Phystrix\Exception\RuntimeException', $exception);
         $this->assertEquals('could not run and fallback disabled', $exception->getMessage());
         $this->assertEquals(
@@ -404,6 +425,9 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @throws Exception
+     */
     public function testRequestCacheHit()
     {
         $this->commandMetricsFactory->expects($this->atLeastOnce())
@@ -411,7 +435,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
             ->with('Tests\Odesk\Phystrix\CommandMock')
             ->will($this->returnValue($this->commandMetrics));
         /** @var RequestCache|\PHPUnit_Framework_MockObject_MockObject $requestCache */
-        $requestCache = $this->getMock('Odesk\Phystrix\RequestCache');
+        $requestCache = $this->createMock('Odesk\Phystrix\RequestCache');
         $requestCache->expects($this->once())
             ->method('exists')
             ->with('Tests\Odesk\Phystrix\CommandMock', 'test-cache-key')
@@ -430,12 +454,13 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test case for cache miss scenario
+     * @throws Exception
      */
     public function testRequestCacheMiss()
     {
         $this->setUpCommonExpectations();
         /** @var RequestCache|\PHPUnit_Framework_MockObject_MockObject $requestCache */
-        $requestCache = $this->getMock('Odesk\Phystrix\RequestCache');
+        $requestCache = $this->createMock('Odesk\Phystrix\RequestCache');
         $requestCache->expects($this->once())
             ->method('exists')
             ->with('Tests\Odesk\Phystrix\CommandMock', 'test-cache-key')
@@ -452,11 +477,14 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('SUCCESS'), $this->command->getExecutionEvents());
     }
 
+    /**
+     * @throws Exception
+     */
     public function testSavesResultToCache()
     {
         $this->setUpCommonExpectations();
         /** @var RequestCache|\PHPUnit_Framework_MockObject_MockObject $requestCache */
-        $requestCache = $this->getMock('Odesk\Phystrix\RequestCache');
+        $requestCache = $this->createMock('Odesk\Phystrix\RequestCache');
         $requestCache->expects($this->once())
             ->method('put')
             ->with('Tests\Odesk\Phystrix\CommandMock', 'test-cache-key', 'run result');
@@ -465,12 +493,15 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('run result', $this->command->execute());
     }
 
+    /**
+     * @throws Exception
+     */
     public function testRequestCacheDisabled()
     {
         $this->setUpCommonExpectations();
         $this->command->setConfig(new Config(array('requestCache' => array('enabled' => false))));
         /** @var RequestCache|\PHPUnit_Framework_MockObject_MockObject $requestCache */
-        $requestCache = $this->getMock('Odesk\Phystrix\RequestCache');
+        $requestCache = $this->createMock('Odesk\Phystrix\RequestCache');
         $requestCache->expects($this->never())
             ->method('get');
         $requestCache->expects($this->never())
@@ -481,11 +512,14 @@ class CommandTest extends \PHPUnit_Framework_TestCase
     }
 
 
+    /**
+     * @throws Exception
+     */
     public function testRequestCacheGetCacheKeyNotImplemented()
     {
         $this->setUpCommonExpectations();
         /** @var RequestCache|\PHPUnit_Framework_MockObject_MockObject $requestCache */
-        $requestCache = $this->getMock('Odesk\Phystrix\RequestCache');
+        $requestCache = $this->createMock('Odesk\Phystrix\RequestCache');
         $requestCache->expects($this->never())
             ->method('get');
         $requestCache->expects($this->never())

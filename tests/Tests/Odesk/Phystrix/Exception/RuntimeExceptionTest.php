@@ -19,8 +19,9 @@
 namespace Tests\Odesk\Phystrix;
 
 use Odesk\Phystrix\Exception\RuntimeException;
+use PHPUnit_Framework_TestCase;
 
-class RuntimeExceptionTest extends \PHPUnit_Framework_TestCase
+class RuntimeExceptionTest extends PHPUnit_Framework_TestCase
 {
     public function testGetCommandClass()
     {

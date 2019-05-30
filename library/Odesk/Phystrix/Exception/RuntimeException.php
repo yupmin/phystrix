@@ -18,6 +18,8 @@
  */
 namespace Odesk\Phystrix\Exception;
 
+use Exception;
+
 /**
  * General Phystrix exception
  */
@@ -26,7 +28,7 @@ class RuntimeException extends \RuntimeException
     /**
      * Exception while retrieving the fallback, if enabled
      *
-     * @var \Exception
+     * @var Exception
      */
     private $fallbackException;
 
@@ -42,14 +44,14 @@ class RuntimeException extends \RuntimeException
      *
      * @param string $message
      * @param int $commandClass
-     * @param \Exception $originalException (Optional) Original exception. May be null if short-circuited
-     * @param \Exception $fallbackException (Optional) Exception thrown while retrieving fallback
+     * @param Exception $originalException (Optional) Original exception. May be null if short-circuited
+     * @param Exception $fallbackException (Optional) Exception thrown while retrieving fallback
      */
     public function __construct(
         $message,
         $commandClass,
-        \Exception $originalException = null,
-        \Exception $fallbackException = null
+        Exception $originalException = null,
+        Exception $fallbackException = null
     ) {
         parent::__construct($message, 0, $originalException);
         $this->fallbackException = $fallbackException;
@@ -69,7 +71,7 @@ class RuntimeException extends \RuntimeException
     /**
      * Returns fallback exception if available
      *
-     * @return \Exception
+     * @return Exception
      */
     public function getFallbackException()
     {

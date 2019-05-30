@@ -18,8 +18,6 @@
  */
 namespace Odesk\Phystrix;
 
-use Odesk\Phystrix\AbstractCommand;
-
 /**
  * Logging commands executed during current request
  */

@@ -35,8 +35,8 @@ class RequestLogTest extends \PHPUnit_Framework_TestCase
 
     public function testAddAndGet()
     {
-        $commandA = $this->getMock('Odesk\Phystrix\AbstractCommand', array('run'));
-        $commandB = $this->getMock('Odesk\Phystrix\AbstractCommand', array('run'));
+        $commandA = $this->createMock('Odesk\Phystrix\AbstractCommand', array('run'));
+        $commandB = $this->createMock('Odesk\Phystrix\AbstractCommand', array('run'));
         $this->assertEmpty($this->requestLog->getExecutedCommands());
         $this->requestLog->addExecutedCommand($commandA);
         $this->requestLog->addExecutedCommand($commandB);
@@ -62,7 +62,7 @@ class RequestLogTest extends \PHPUnit_Framework_TestCase
 
     protected function addExecutedCommand($commandKey, $executionTime, array $events)
     {
-        $command = $this->getMock(
+        $command = $this->createMock(
             'Odesk\Phystrix\AbstractCommand',
             array('run', 'getCommandKey', 'getExecutionEvents', 'getExecutionTimeInMilliseconds')
         );

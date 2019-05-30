@@ -19,8 +19,9 @@
 namespace Tests\Odesk\Phystrix;
 
 use Odesk\Phystrix\HealthCountsSnapshot;
+use PHPUnit_Framework_TestCase;
 
-class HealthCountsSnapshotTest extends \PHPUnit_Framework_TestCase
+class HealthCountsSnapshotTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @var HealthCountsSnapshot

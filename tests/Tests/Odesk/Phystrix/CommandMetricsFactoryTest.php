@@ -20,6 +20,7 @@ namespace Tests\Odesk\Phystrix;
 
 use Odesk\Phystrix\ArrayStateStorage;
 use Odesk\Phystrix\CommandMetricsFactory;
+use ReflectionClass;
 
 class CommandMetricsFactoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -36,7 +37,7 @@ class CommandMetricsFactoryTest extends \PHPUnit_Framework_TestCase
         $metrics = $factory->get('TestCommand', $config);
         $this->assertAttributeEquals(2000, 'healthSnapshotIntervalInMilliseconds', $metrics);
 
-        $reflection = new \ReflectionClass('Odesk\Phystrix\CommandMetrics');
+        $reflection = new ReflectionClass('Odesk\Phystrix\CommandMetrics');
         $property = $reflection->getProperty('counter');
         $property->setAccessible(true);
         $counter = $property->getValue($metrics);

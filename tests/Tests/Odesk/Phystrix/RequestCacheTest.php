@@ -19,8 +19,9 @@
 namespace Tests\Odesk\Phystrix;
 
 use Odesk\Phystrix\RequestCache;
+use PHPUnit_Framework_TestCase;
 
-class RequestCacheTest extends \PHPUnit_Framework_TestCase
+class RequestCacheTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @var RequestCache

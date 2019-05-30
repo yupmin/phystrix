@@ -34,8 +34,8 @@ class CircuitBreakerTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->metrics = $this->getMock('Odesk\Phystrix\CommandMetrics', array(), array(), '', false);
-        $this->stateStorage = $this->getMock('Odesk\Phystrix\StateStorageInterface');
+        $this->metrics = $this->createMock('Odesk\Phystrix\CommandMetrics', array(), array(), '', false);
+        $this->stateStorage = $this->createMock('Odesk\Phystrix\StateStorageInterface');
     }
 
     protected function getCircuitBreaker($config = array())
@@ -81,7 +81,7 @@ class CircuitBreakerTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo('TestCommand'))
             ->will($this->returnValue(false));
 
-        $healthCounts = $this->getMock('Odesk\Phystrix\HealthCountsSnapshot', array(), array(), '', false);
+        $healthCounts = $this->createMock('Odesk\Phystrix\HealthCountsSnapshot', array(), array(), '', false);
         $healthCounts->expects($this->once())
             ->method('getTotal')
             ->will($this->returnValue(47)); // total is 47, threshold is set to 50.
@@ -97,7 +97,7 @@ class CircuitBreakerTest extends \PHPUnit_Framework_TestCase
 
     public function testIsOpenErrorPercentageNotBigEnough()
     {
-        $healthCounts = $this->getMock('Odesk\Phystrix\HealthCountsSnapshot', array(), array(), '', false);
+        $healthCounts = $this->createMock('Odesk\Phystrix\HealthCountsSnapshot', array(), array(), '', false);
         $healthCounts->expects($this->once())
             ->method('getTotal')
             ->will($this->returnValue(60)); // total is 60, threshold is set to 50.
@@ -113,7 +113,7 @@ class CircuitBreakerTest extends \PHPUnit_Framework_TestCase
 
     public function testIsOpenOpensCircuit()
     {
-        $healthCounts = $this->getMock('Odesk\Phystrix\HealthCountsSnapshot', array(), array(), '', false);
+        $healthCounts = $this->createMock('Odesk\Phystrix\HealthCountsSnapshot', array(), array(), '', false);
         $healthCounts->expects($this->once())
             ->method('getTotal')
             ->will($this->returnValue(60)); // total is 60, threshold is set to 50.

@@ -21,6 +21,7 @@ namespace Tests\Odesk\Phystrix;
 use Odesk\Phystrix\CommandMetrics;
 use Odesk\Phystrix\HealthCountsSnapshot;
 use Odesk\Phystrix\MetricsCounter;
+use ReflectionClass;
 
 class CommandMetricsTest extends \PHPUnit_Framework_TestCase
 {
@@ -36,7 +37,7 @@ class CommandMetricsTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->counter = $this->getMock('Odesk\Phystrix\MetricsCounter', array(), array(), '', false);
+        $this->counter = $this->createMock('Odesk\Phystrix\MetricsCounter', array(), array(), '', false);
         $this->metrics = new CommandMetrics($this->counter, 1000);
         // microtime is fixed
         global $globalUnitTestPhystrixMicroTime;
@@ -126,7 +127,7 @@ class CommandMetricsTest extends \PHPUnit_Framework_TestCase
         $snapshot = new HealthCountsSnapshot($now - 500, 11, 22);
 
         // setting it as the last snapshot into metrics
-        $reflection = new \ReflectionClass('Odesk\Phystrix\CommandMetrics');
+        $reflection = new ReflectionClass('Odesk\Phystrix\CommandMetrics');
         $property = $reflection->getProperty('lastSnapshot');
         $property->setAccessible(true);
         $property->setValue($this->metrics, $snapshot);
@@ -144,7 +145,7 @@ class CommandMetricsTest extends \PHPUnit_Framework_TestCase
         $snapshot = new HealthCountsSnapshot($now - 2000, 11, 22);
 
         // setting it as the last snapshot into metrics
-        $reflection = new \ReflectionClass('Odesk\Phystrix\CommandMetrics');
+        $reflection = new ReflectionClass('Odesk\Phystrix\CommandMetrics');
         $property = $reflection->getProperty('lastSnapshot');
         $property->setAccessible(true);
         $property->setValue($this->metrics, $snapshot);

@@ -21,7 +21,7 @@ namespace Odesk\Phystrix;
 use Odesk\Phystrix\Exception\BadRequestException;
 use Odesk\Phystrix\Exception\FallbackNotAvailableException;
 use Odesk\Phystrix\Exception\RuntimeException;
-use Zend\Di\LocatorInterface;
+use Psr\Container\ContainerInterface;
 use Zend\Config\Config;
 use Exception;
 
@@ -64,9 +64,9 @@ abstract class AbstractCommand
     private $commandMetricsFactory;
 
     /**
-     * @var LocatorInterface
+     * @var ContainerInterface
      */
-    protected $serviceLocator;
+    protected $container;
 
     /**
      * @var RequestCache
@@ -95,7 +95,7 @@ abstract class AbstractCommand
     /**
      * Exception thrown if there was one
      *
-     * @var \Exception
+     * @var Exception
      */
     private $executionException;
 
@@ -212,6 +212,7 @@ abstract class AbstractCommand
      *
      * @return mixed
      * @throws BadRequestException Re-throws it when the command throws it, without metrics tracking
+     * @throws Exception
      */
     public function execute()
     {
@@ -285,19 +286,18 @@ abstract class AbstractCommand
      */
     protected function processExecutionEvent($eventName)
     {
+        //
     }
-
 
     /**
-     * Sets service locator instance, for injecting custom dependencies into the command
+     * Sets service container instance, for injecting custom dependencies into the command
      *
-     * @param LocatorInterface $serviceLocator
+     * @param ContainerInterface $container
      */
-    public function setServiceLocator(LocatorInterface $serviceLocator)
+    public function setContainer(ContainerInterface $container)
     {
-        $this->serviceLocator = $serviceLocator;
+        $this->container = $container;
     }
-
 
     /**
      * Logic to record events and exceptions as they take place
@@ -324,7 +324,7 @@ abstract class AbstractCommand
     /**
      * Circuit breaker for this command key
      *
-     * @return CircuitBreaker
+     * @return CircuitBreakerInterface
      */
     private function getCircuitBreaker()
     {
@@ -346,7 +346,7 @@ abstract class AbstractCommand
         try {
             if ($this->config->get('fallback')->get('enabled')) {
                 try {
-                    $executionResult = $this->getFallback();
+                    $executionResult = $this->getFallback($originalException);
                     $metrics->markFallbackSuccess();
                     $this->recordExecutionEvent(self::EVENT_FALLBACK_SUCCESS);
                     return $executionResult;
@@ -384,9 +384,11 @@ abstract class AbstractCommand
     /**
      * Code for when execution fails for whatever reason
      *
+     * @param Exception $exception
+     * @return mixed
      * @throws FallbackNotAvailableException When no custom fallback provided
      */
-    protected function getFallback()
+    protected function getFallback(Exception $exception)
     {
         throw new FallbackNotAvailableException('No fallback available');
     }

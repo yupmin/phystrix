@@ -1,4 +1,8 @@
-[![Build Status](https://travis-ci.org/upwork/phystrix.svg)](https://travis-ci.org/upwork/phystrix)
+[![Build Status](https://travis-ci.org/yupmin/modern-phystrix.svg)](https://travis-ci.org/yupmin/modern-phystrix)
+
+## Requirement
+* PHP 5.6 above
+* Modern PHP
 
 ### About Phystrix
 
@@ -7,6 +11,11 @@ In distributed systems with PHP frontend, application talks to a number of remot
 Phystrix protects the points of access to remote resources by keeping track of various metrics and preventing repetitive failures.
 
 In case of a service failing way too often, to not make the situation worse, Phystrix will temporarily stop issuing requests to it. When the service comes back to life, Phystrix allows the client application to access it again.
+
+And I fixed more for Modern PHP 
+* Use PHP 5.6 above
+* Deleted 'Zend DI' and User 'PSR DI'
+* DI is optional. (for using Your framework)
 
 ### Understanding Phystrix
 
@@ -18,10 +27,11 @@ Even though there is not much available at the moment in terms of documentation 
 
 Recommended way to install Phystrix is by using [Composer](https://getcomposer.org):
 
-```javascript
-"require": {
-     "odesk/phystrix": "dev-master"
-}
+```json
+  "require": {
+     "yupmin/modern-phystrix": "dev-master"
+  },
+
 ```
 
 To store and share metrics between requests, Phystrix uses [APC](http://php.net/manual/en/book.apc.php), so make sure you have the PHP extension enabled.
@@ -85,10 +95,16 @@ $config = new Config(require 'phystrix-config.php');
 $stateStorage = new ApcStateStorage();
 $circuitBreakerFactory = new CircuitBreakerFactory($stateStorage);
 $commandMetricsFactory = new CommandMetricsFactory($stateStorage);
+$builder = new DI\ContainerBuilder();
+$container = $builder->build();
 
 $phystrix = new CommandFactory(
-    $config, new \Zend\Di\ServiceLocator(), $circuitBreakerFactory, $commandMetricsFactory,
-    new \Odesk\Phystrix\RequestCache(), new \Odesk\Phystrix\RequestLog()
+    $config,
+    $circuitBreakerFactory, 
+    $commandMetricsFactory,
+    new \Odesk\Phystrix\RequestCache(), 
+    new \Odesk\Phystrix\RequestLog(),
+    $container
 );
 ```
 
@@ -186,7 +202,7 @@ class GetAvatarUrlCommand extends AbstractCommand
 
     protected function run()
     {
-        $remoteAvatarService = $this->serviceLocator->get('avatarService');
+        $remoteAvatarService = $this->container->get('avatarService');
         return $remoteAvatarService->getUrlByUser($this->user);
     }
 
@@ -241,7 +257,7 @@ where “timeout” is a custom parameter which Phystrix does not make any use o
 ```php
     protected function run()
     {
-        $remoteAvatarService = $this->serviceLocator->get('avatarService');
+        $remoteAvatarService = $this->container->get('avatarService');
         return $remoteAvatarService->getUrlByUser($this->user);
     }
 
@@ -250,7 +266,7 @@ where “timeout” is a custom parameter which Phystrix does not make any use o
      */
     protected function prepare()
     {
-        $remoteAvatarService = $this->serviceLocator->get('avatarService');
+        $remoteAvatarService = $this->container->get('avatarService');
         if ($this->config->__isset('timeout')) {
             // if the timeout is exceeded an exception will be thrown
             $remoteAvatarService->setTimeout($this->config->get('timeout'));
@@ -268,27 +284,33 @@ Since you get the commands from a special factory, you need a way to inject cust
 
 One way would be to extend the __Odesk\Phystrix\CommandFactory__, create your own factory and have it inject what you need.
 
-Alternatively, configure the locator instance that __Odesk\Phystrix\CommandFactory__ accepts in the constructor.
+Alternatively, configure the container instance that __Odesk\Phystrix\CommandFactory__ accepts in the constructor.
 
-The service locator can be anything, implementing the very basic [Zend\Di\LocatorInterface](https://github.com/zendframework/zf2/blob/master/library/Zend/Di/LocatorInterface.php). You can inject an IoC container that will lazily instantiate instance as they are needed, or you can use a simpler, preconfigured, instance of __Zend\Di\ServiceLocator__:
+The service container can be anything, implementing the very basic [PSR Container](https://github.com/php-fig/container). You can inject an IoC container that will lazily instantiate instance as they are needed, or you can use a simpler, preconfigured, instance of __Psr\Container\ContainerInterface__:
 
 ```php
-$serviceLocator = \Zend\Di\ServiceLocator();
-$googleApiRemoteService = new GoogleApi(...);
-$serviceLocator->set('googleApi', $googleApiRemoteService);
+$builder = new DI\ContainerBuilder();
+$container = $builder->build();
+
+// autowiring
+// new GoogleApi(...);
 
 $phystrix = new CommandFactory(
-    $config, $serviceLocator, $circuitBreakerFactory,
-    $commandMetricsFactory, new \Odesk\Phystrix\RequestCache()
+    $config, 
+    $circuitBreakerFactory,
+    $commandMetricsFactory, 
+    new \Odesk\Phystrix\RequestCache(), 
+    new \Odesk\Phystrix\RequestLog(),
+    $conatiner
 );
 ```
 
-You can access the service locator from within your commands as follows:
+You can access the service container from within your commands as follows:
 
 ```php
     protected function run()
     {
-        $googleApi = $this->serviceLocator->get('googleApi');
+        $googleApi = $this->container->get('googleApi');
         return $googleApi->fetchAllEmail();
     }
 ```

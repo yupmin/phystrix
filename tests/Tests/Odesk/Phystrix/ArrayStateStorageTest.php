@@ -19,8 +19,9 @@
 namespace Tests\Odesk\Phystrix;
 
 use Odesk\Phystrix\ArrayStateStorage;
+use PHPUnit_Framework_TestCase;
 
-class ArrayStateStorageTest extends \PHPUnit_Framework_TestCase
+class ArrayStateStorageTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @var ArrayStateStorage
