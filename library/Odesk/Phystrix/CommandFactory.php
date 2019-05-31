@@ -63,12 +63,11 @@ class CommandFactory
      * Constructor
      *
      * @param Config $config
-     * @param LocatorInterface $serviceLocator
      * @param CircuitBreakerFactory $circuitBreakerFactory
      * @param CommandMetricsFactory $commandMetricsFactory
-     * @param RequestCache $requestCache
-     * @param RequestLog $requestLog
-     * @param ContainerInterface $container
+     * @param RequestCache|null $requestCache
+     * @param RequestLog|null $requestLog
+     * @param ContainerInterface|null $container
      */
     public function __construct(
         Config $config,

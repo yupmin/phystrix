@@ -64,7 +64,7 @@ abstract class AbstractCommand
     private $commandMetricsFactory;
 
     /**
-     * @var ContainerInterface
+     * @var ContainerInterface|null
      */
     protected $container;
 
@@ -292,9 +292,9 @@ abstract class AbstractCommand
     /**
      * Sets service container instance, for injecting custom dependencies into the command
      *
-     * @param ContainerInterface $container
+     * @param ContainerInterface|null $container
      */
-    public function setContainer(ContainerInterface $container)
+    public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
     }
