@@ -118,7 +118,8 @@ abstract class AbstractCommand
         } else {
             // If the command key hasn't been defined in the class we use the current class name
             // refs : https://github.com/persevereVon/preq-laravel/blob/master/src/AbstractCommand.php#L100
-            return str_replace('\\', '.', get_class($this));
+            // return str_replace('\\', '.', get_class($this));
+            return get_class($this);
         }
     }
 
