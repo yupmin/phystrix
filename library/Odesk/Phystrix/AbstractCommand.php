@@ -117,7 +117,8 @@ abstract class AbstractCommand
             return $this->commandKey;
         } else {
             // If the command key hasn't been defined in the class we use the current class name
-            return get_class($this);
+            // refs : https://github.com/persevereVon/preq-laravel/blob/master/src/AbstractCommand.php#L100
+            return str_replace('\\', '.', get_class($this));
         }
     }
 
@@ -384,11 +385,11 @@ abstract class AbstractCommand
     /**
      * Code for when execution fails for whatever reason
      *
-     * @param Exception $exception
+     * @param Exception|null $exception
      * @return mixed
      * @throws FallbackNotAvailableException When no custom fallback provided
      */
-    protected function getFallback(Exception $exception)
+    protected function getFallback(Exception $exception = null)
     {
         throw new FallbackNotAvailableException('No fallback available');
     }
