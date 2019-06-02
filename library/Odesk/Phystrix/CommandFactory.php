@@ -18,6 +18,7 @@
  */
 namespace Odesk\Phystrix;
 
+use Psr\SimpleCache\CacheInterface;
 use ReflectionClass;
 use ReflectionException;
 use Psr\Container\ContainerInterface;
@@ -50,7 +51,7 @@ class CommandFactory
     protected $commandMetricsFactory;
 
     /**
-     * @var RequestCache
+     * @var CacheInterface
      */
     protected $requestCache;
 
@@ -65,7 +66,7 @@ class CommandFactory
      * @param Config $config
      * @param CircuitBreakerFactory $circuitBreakerFactory
      * @param CommandMetricsFactory $commandMetricsFactory
-     * @param RequestCache|null $requestCache
+     * @param CacheInterface|null $requestCache
      * @param RequestLog|null $requestLog
      * @param ContainerInterface|null $container
      */
@@ -73,7 +74,7 @@ class CommandFactory
         Config $config,
         CircuitBreakerFactory $circuitBreakerFactory,
         CommandMetricsFactory $commandMetricsFactory,
-        RequestCache $requestCache = null,
+        CacheInterface $requestCache = null,
         RequestLog $requestLog = null,
         ContainerInterface $container = null
     ) {

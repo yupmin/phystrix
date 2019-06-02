@@ -97,14 +97,14 @@ class CommandTest extends \PHPUnit_Framework_TestCase
     {
         $this->circuitBreakerFactory->expects($this->once())
             ->method('get')
-            ->with('Tests\Odesk\Phystrix\CommandMock')
+            ->with('Tests.Odesk.Phystrix.CommandMock')
             ->will($this->returnValue($this->circuitBreaker));
         $this->circuitBreaker->expects($this->once())
             ->method('allowRequest')
             ->will($this->returnValue($allowRequest));
         $this->commandMetricsFactory->expects($this->atLeastOnce())
             ->method('get')
-            ->with('Tests\Odesk\Phystrix\CommandMock')
+            ->with('Tests.Odesk.Phystrix.CommandMock')
             ->will($this->returnValue($this->commandMetrics));
     }
 
@@ -431,22 +431,23 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @throws Exception
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function testRequestCacheHit()
     {
         $this->commandMetricsFactory->expects($this->atLeastOnce())
             ->method('get')
-            ->with('Tests\Odesk\Phystrix\CommandMock')
+            ->with('Tests.Odesk.Phystrix.CommandMock')
             ->will($this->returnValue($this->commandMetrics));
         /** @var RequestCache|\PHPUnit_Framework_MockObject_MockObject $requestCache */
         $requestCache = $this->createMock('Odesk\Phystrix\RequestCache');
         $requestCache->expects($this->once())
-            ->method('exists')
-            ->with('Tests\Odesk\Phystrix\CommandMock', 'test-cache-key')
+            ->method('has')
+            ->with('Tests.Odesk.Phystrix.CommandMock'.'.'.'test-cache-key')
             ->will($this->returnValue(true));
         $requestCache->expects($this->once())
             ->method('get')
-            ->with('Tests\Odesk\Phystrix\CommandMock', 'test-cache-key')
+            ->with('Tests.Odesk.Phystrix.CommandMock'.'.'.'test-cache-key')
             ->will($this->returnValue('result from cache'));
         $this->command->cacheKey = 'test-cache-key';
         $this->command->setRequestCache($requestCache);
@@ -459,6 +460,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
     /**
      * Test case for cache miss scenario
      * @throws Exception
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function testRequestCacheMiss()
     {
@@ -466,14 +468,14 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         /** @var RequestCache|\PHPUnit_Framework_MockObject_MockObject $requestCache */
         $requestCache = $this->createMock('Odesk\Phystrix\RequestCache');
         $requestCache->expects($this->once())
-            ->method('exists')
-            ->with('Tests\Odesk\Phystrix\CommandMock', 'test-cache-key')
+            ->method('has')
+            ->with('Tests.Odesk.Phystrix.CommandMock'.'.'.'test-cache-key')
             ->will($this->returnValue(false));
         $requestCache->expects($this->never())
             ->method('get');
         $requestCache->expects($this->once())
-            ->method('put')
-            ->with('Tests\Odesk\Phystrix\CommandMock', 'test-cache-key', 'run result');
+            ->method('set')
+            ->with('Tests.Odesk.Phystrix.CommandMock'.'.'.'test-cache-key', 'run result');
         $this->command->cacheKey = 'test-cache-key';
         $this->command->setRequestCache($requestCache);
         $this->commandMetrics->expects($this->never())->method('markResponseFromCache');
@@ -483,6 +485,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @throws Exception
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function testSavesResultToCache()
     {
@@ -490,8 +493,8 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         /** @var RequestCache|\PHPUnit_Framework_MockObject_MockObject $requestCache */
         $requestCache = $this->createMock('Odesk\Phystrix\RequestCache');
         $requestCache->expects($this->once())
-            ->method('put')
-            ->with('Tests\Odesk\Phystrix\CommandMock', 'test-cache-key', 'run result');
+            ->method('set')
+            ->with('Tests.Odesk.Phystrix.CommandMock'.'.'.'test-cache-key', 'run result');
         $this->command->cacheKey = 'test-cache-key';
         $this->command->setRequestCache($requestCache);
         $this->assertEquals('run result', $this->command->execute());
@@ -499,6 +502,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @throws Exception
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function testRequestCacheDisabled()
     {
@@ -509,7 +513,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         $requestCache->expects($this->never())
             ->method('get');
         $requestCache->expects($this->never())
-            ->method('put');
+            ->method('set');
         $this->command->cacheKey = 'test-cache-key';
         $this->command->setRequestCache($requestCache);
         $this->assertEquals('run result', $this->command->execute());
@@ -518,6 +522,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @throws Exception
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function testRequestCacheGetCacheKeyNotImplemented()
     {
@@ -527,7 +532,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         $requestCache->expects($this->never())
             ->method('get');
         $requestCache->expects($this->never())
-            ->method('put');
+            ->method('set');
         $this->command->setRequestCache($requestCache);
         $this->assertEquals('run result', $this->command->execute());
     }

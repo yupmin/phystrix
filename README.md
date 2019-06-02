@@ -1,8 +1,13 @@
 # Modern Phystrix
 
 [![Build Status](https://travis-ci.org/yupmin/phystrix.svg)](https://travis-ci.org/yupmin/phystrix)
+[![Latest Stable Version](https://poser.pugx.org/yupmin/modern-phystrix/v/stable)](https://packagist.org/packages/yupmin/modern-phystrix)
+[![Total Downloads](https://poser.pugx.org/yupmin/modern-phystrix/downloads)](https://packagist.org/packages/yupmin/modern-phystrix)
+[![License](https://poser.pugx.org/yupmin/modern-phystrix/license)](https://packagist.org/packages/yupmin/modern-phystrix)
+[![Coding Standards](https://img.shields.io/badge/cs-PSR--2--R-yellow.svg)](https://github.com/php-fig-rectified/fig-rectified-standards)
 
 ## Requirement
+
 * PHP 5.6 above
 * Modern PHP
 
@@ -14,11 +19,15 @@ Phystrix protects the points of access to remote resources by keeping track of v
 
 In case of a service failing way too often, to not make the situation worse, Phystrix will temporarily stop issuing requests to it. When the service comes back to life, Phystrix allows the client application to access it again.
 
-And I fixed more for Modern PHP 
-* Use PHP 5.6 above
-* Deleted 'Zend DI' and User 'PSR DI'
-* DI is optional. (for using Your framework)
-* PSR2 is default.
+### Differences from [older version(upwork/phystrix)](https://github.com/upwork/phystrix)
+
+* Use PHP 5.6 and PHP 7 above
+* Change from 'Zend DI' to 'PSR DI', DI is optional. (for using Your framework)
+* Add [phystrix dashboard](https://github.com/upwork/phystrix-dashboard) library, and fix more.
+* Add Libraries of APCU
+* PSR-2: Coding Style is default.
+* PSR-3: Logger Interface(coming soon)
+* PSR-16: Common Interface for Caching Libraries
 
 ### Understanding Phystrix
 
@@ -41,8 +50,8 @@ To store and share metrics between requests, Phystrix uses [APC](http://php.net/
 
 ### Php 7.2
 
-In php 7 the API for `apcu` changed. You will need to install [apcu-bc](https://github.com/krakjoe/apcu-bc) in addition to `apcu` to use Phystrix.
-The backwards compatibility layer extension must be loaded AFTER `apcu`.
+In php 7 the API for `apcu` changed. You must use `ApcuStateStorage` and `ApcuMetricsPoller`. ~~You will need to install [apcu-bc](https://github.com/krakjoe/apcu-bc) in addition to `apcu` to use Phystrix.
+The backwards compatibility layer extension must be loaded AFTER `apcu`.~~
 
 ## Usage
 

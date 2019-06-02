@@ -22,6 +22,7 @@ use Odesk\Phystrix\Exception\BadRequestException;
 use Odesk\Phystrix\Exception\FallbackNotAvailableException;
 use Odesk\Phystrix\Exception\RuntimeException;
 use Psr\Container\ContainerInterface;
+use Psr\SimpleCache\CacheInterface;
 use Zend\Config\Config;
 use Exception;
 
@@ -69,7 +70,7 @@ abstract class AbstractCommand
     protected $container;
 
     /**
-     * @var RequestCache
+     * @var CacheInterface
      */
     private $requestCache;
 
@@ -117,9 +118,9 @@ abstract class AbstractCommand
             return $this->commandKey;
         } else {
             // If the command key hasn't been defined in the class we use the current class name
+            // but hystrix dashboard not work, because fixed below.
             // refs : https://github.com/persevereVon/preq-laravel/blob/master/src/AbstractCommand.php#L100
-            // return str_replace('\\', '.', get_class($this));
-            return get_class($this);
+             return str_replace('\\', '.', get_class($this));
         }
     }
 
@@ -146,9 +147,9 @@ abstract class AbstractCommand
     /**
      * Sets shared object for request caching
      *
-     * @param RequestCache $requestCache
+     * @param CacheInterface $requestCache
      */
-    public function setRequestCache(RequestCache $requestCache)
+    public function setRequestCache(CacheInterface $requestCache)
     {
         $this->requestCache = $requestCache;
     }
@@ -201,7 +202,7 @@ abstract class AbstractCommand
      */
     private function isRequestCacheEnabled()
     {
-        if (!$this->requestCache) {
+        if (!$this->requestCache instanceof CacheInterface) {
             return false;
         }
 
@@ -215,6 +216,7 @@ abstract class AbstractCommand
      * @return mixed
      * @throws BadRequestException Re-throws it when the command throws it, without metrics tracking
      * @throws Exception
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function execute()
     {
@@ -227,11 +229,11 @@ abstract class AbstractCommand
 
         // trying from cache first
         if ($cacheEnabled) {
-            $cacheHit = $this->requestCache->exists($this->getCommandKey(), $this->getCacheKey());
+            $cacheHit = $this->requestCache->has($this->getCommandKey().'.'.$this->getCacheKey());
             if ($cacheHit) {
                 $metrics->markResponseFromCache();
                 $this->recordExecutionEvent(self::EVENT_RESPONSE_FROM_CACHE);
-                return $this->requestCache->get($this->getCommandKey(), $this->getCacheKey());
+                return $this->requestCache->get($this->getCommandKey().'.'.$this->getCacheKey());
             }
         }
         $circuitBreaker = $this->getCircuitBreaker();
@@ -261,7 +263,7 @@ abstract class AbstractCommand
 
         // putting the result into cache
         if ($cacheEnabled) {
-            $this->requestCache->put($this->getCommandKey(), $this->getCacheKey(), $result);
+            $this->requestCache->set($this->getCommandKey().'.'.$this->getCacheKey(), $result);
         }
 
         return $result;

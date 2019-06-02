@@ -18,81 +18,61 @@
  */
 namespace Odesk\Phystrix;
 
+use Exception;
+use Psr\SimpleCache\CacheInterface;
+
 /**
  * Object for request caching, one instance shared between all commands
  */
-class RequestCache
+class RequestCache implements CacheInterface
 {
-    /**
-     * Associative array of results per command key per cache key
-     *
-     * @var array
-     */
-    protected $cachedResults = array();
+    /** @var array */
+    protected $storage = array();
 
-    /**
-     * Clears the cache for a given commandKey only
-     *
-     * @param string $commandKey
-     */
-    public function clearAll($commandKey)
+    public function clear()
     {
-        if (isset($this->cachedResults[$commandKey])) {
-            unset($this->cachedResults[$commandKey]);
+        unset($this->storage);
+        $this->storage = array();
+    }
+
+    public function delete($key)
+    {
+        if ($this->has($key)) {
+            unset($this->storage[$key]);
         }
     }
 
-    /**
-     * Clears the cache for a given cacheKey, for a given commandKey
-     *
-     * @param string $commandKey
-     * @param string $cacheKey
-     */
-    public function clear($commandKey, $cacheKey)
+    public function get($key, $default = null)
     {
-        if ($this->exists($commandKey, $cacheKey)) {
-            unset($this->cachedResults[$commandKey][$cacheKey]);
-        }
-    }
-
-    /**
-     * Attempts to obtain cached result for a given command type
-     *
-     * @param string $commandKey
-     * @param string $cacheKey
-     * @return mixed|null
-     */
-    public function get($commandKey, $cacheKey)
-    {
-        if ($this->exists($commandKey, $cacheKey)) {
-            return $this->cachedResults[$commandKey][$cacheKey];
+        if ($this->has($key)) {
+            return $this->storage[$key];
         }
 
-        return null;
+        return $default;
     }
 
-    /**
-     * Puts request result into cache for a given command type
-     *
-     * @param string $commandKey
-     * @param string $cacheKey
-     * @param mixed $result
-     */
-    public function put($commandKey, $cacheKey, $result)
+    public function set($key, $value, $ttl = null)
     {
-        $this->cachedResults[$commandKey][$cacheKey] = $result;
+        $this->storage[$key] = $value;
     }
 
-    /**
-     * Returns true, if specified cache key exists
-     *
-     * @param string $commandKey
-     * @param string $cacheKey
-     * @return bool
-     */
-    public function exists($commandKey, $cacheKey)
+    public function has($key)
     {
-        return array_key_exists($commandKey, $this->cachedResults)
-            && array_key_exists($cacheKey, $this->cachedResults[$commandKey]);
+        return array_key_exists($key, $this->storage);
+    }
+
+    public function getMultiple($keys, $default = null)
+    {
+        throw new Exception('Not supported');
+    }
+
+    public function setMultiple($values, $ttl = null)
+    {
+        throw new Exception('Not supported');
+    }
+
+    public function deleteMultiple($keys)
+    {
+        throw new Exception('Not supported');
     }
 }

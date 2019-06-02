@@ -77,7 +77,7 @@ class CommandFactoryTest extends PHPUnit_Framework_TestCase
                 'fallback' => array('enabled' => true),
                 'customData' => 12345
             ),
-            'Tests\Odesk\Phystrix\FactoryCommandMock' => array(
+            'Tests.Odesk.Phystrix.FactoryCommandMock' => array(
                 'fallback' => array('enabled' => false),
                 'circuitBreaker' => array('enabled' => false)
             )
