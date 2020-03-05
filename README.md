@@ -8,7 +8,7 @@
 
 ## Requirement
 
-* PHP 5.6 above
+* PHP 7.1 above
 * Modern PHP
 
 ### About Phystrix
@@ -21,13 +21,14 @@ In case of a service failing way too often, to not make the situation worse, Phy
 
 ### Differences from [older version(upwork/phystrix)](https://github.com/upwork/phystrix)
 
-* Use PHP 5.6 and PHP 7 above
+* Use PHP 7.1 above
 * Change from 'Zend DI' to 'PSR DI', DI is optional. (for using Your framework)
 * Add [phystrix dashboard](https://github.com/upwork/phystrix-dashboard) library, and fix more.
 * Add Libraries of APCU
-* PSR-2: Coding Style is default.
+* PSR-12: Coding Style is default.
 * PSR-3: Logger Interface(coming soon)
 * PSR-16: Common Interface for Caching Libraries
+
 
 ### Understanding Phystrix
 
@@ -41,7 +42,7 @@ Recommended way to install Phystrix is by using [Composer](https://getcomposer.o
 
 ```json
   "require": {
-     "yupmin/modern-phystrix": "~3.0"
+     "yupmin/modern-phystrix": "~4.0"
   },
 
 ```
@@ -96,7 +97,7 @@ Notice, the extra parameters you pass to the factory’s getCommand method are f
 The factory is instantiated as follows:
 
 ```php
-use Zend\Config\Config;
+use Laminas\Config\Config;
 use Odesk\Phystrix\ApcStateStorage;
 use Odesk\Phystrix\CircuitBreakerFactory;
 use Odesk\Phystrix\CommandMetricsFactory;
@@ -120,7 +121,7 @@ $phystrix = new CommandFactory(
 );
 ```
 
-The way you store the configuration files is up to you. Phystrix relies on [Zend\Config](https://github.com/zendframework/Component_ZendConfig)  to manage configurations. In this case, __phystrix-config.php__ is a PHP array:
+The way you store the configuration files is up to you. Phystrix relies on [Laminas\Config](https://github.com/zendframework/Component_ZendConfig)  to manage configurations. In this case, __phystrix-config.php__ is a PHP array:
 
 ```php
 return array(
@@ -188,7 +189,7 @@ Phystrix only works with the command keys. If you have two different commands wi
 Sometimes, you may need to change a parameter when a command is used in a particular context:
 
 ```php
-use Zend\Config\Config;
+use Laminas\Config\Config;
 $myCommand = $phystrix->getCommand('MyCommand', 'Alex');
 $myCommand->setConfig(new Config(array('requestCache' => array('enabled' => false))));
 $result = $myCommand->execute();

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is a part of the Phystrix library
  *
@@ -16,6 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 namespace Odesk\Phystrix;
 
 /**
@@ -26,7 +28,7 @@ class MetricsCounter
     /**
      * Types of metrics we can track
      */
-    const
+    public const
         SUCCESS             = 1,
         FAILURE             = 2,
         TIMEOUT             = 3,
@@ -163,9 +165,17 @@ class MetricsCounter
     public function reset()
     {
         // For each type of metric, we attempt to set the counter to 0
-        foreach (array(self::SUCCESS, self::FAILURE, self::TIMEOUT, self::FALLBACK_SUCCESS,
-                       self::FALLBACK_FAILURE, self::EXCEPTION_THROWN,
-                       self::RESPONSE_FROM_CACHE) as $type) {
+        foreach (
+            [
+                self::SUCCESS,
+                self::FAILURE,
+                self::TIMEOUT,
+                self::FALLBACK_SUCCESS,
+                self::FALLBACK_FAILURE,
+                self::EXCEPTION_THROWN,
+                self::RESPONSE_FROM_CACHE
+            ] as $type
+        ) {
             $now = $this->getTimeInMilliseconds();
             for ($i = 0; $i < $this->rollingStatisticalWindowBuckets; $i++) {
                 $bucketIndex = $this->getBucketIndex($i, $now);

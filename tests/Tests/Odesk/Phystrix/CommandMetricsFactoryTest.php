@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is a part of the Phystrix library
  *
@@ -16,6 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 namespace Tests\Odesk\Phystrix;
 
 use Odesk\Phystrix\ArrayStateStorage;
@@ -26,7 +28,7 @@ class CommandMetricsFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testGet()
     {
-        $config = new \Zend\Config\Config(array(
+        $config = new \Laminas\Config\Config(array(
             'metrics' => array(
                 'rollingStatisticalWindowInMilliseconds' => 10000,
                 'rollingStatisticalWindowBuckets' => 10,

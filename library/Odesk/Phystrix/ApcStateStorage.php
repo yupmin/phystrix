@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is a part of the Phystrix library
  *
@@ -16,6 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 namespace Odesk\Phystrix;
 
 /**
@@ -23,13 +25,13 @@ namespace Odesk\Phystrix;
  */
 class ApcStateStorage implements StateStorageInterface
 {
-    const BUCKET_EXPIRE_SECONDS = 120;
+    public const BUCKET_EXPIRE_SECONDS = 120;
 
-    const CACHE_PREFIX = 'phystrix_cb_';
+    public const CACHE_PREFIX = 'phystrix_cb_';
 
-    const OPENED_NAME = 'opened';
+    public const OPENED_NAME = 'opened';
 
-    const SINGLE_TEST_BLOCKED = 'single_test_blocked';
+    public const SINGLE_TEST_BLOCKED = 'single_test_blocked';
 
     /**
      * Constructor
@@ -129,7 +131,7 @@ class ApcStateStorage implements StateStorageInterface
         // using 'add' enforces thread safety.
         $sleepingWindowInSeconds = ceil($sleepingWindowInMilliseconds / 1000);
         // another APC limitation is that within the current request variables will never expire.
-        return (boolean) apc_add($singleTestFlagKey, true, $sleepingWindowInSeconds);
+        return (bool)apc_add($singleTestFlagKey, true, $sleepingWindowInSeconds);
     }
 
     /**
@@ -141,7 +143,7 @@ class ApcStateStorage implements StateStorageInterface
     public function isCircuitOpen($commandKey)
     {
         $openedKey = $this->prefix($commandKey . self::OPENED_NAME);
-        return (boolean) apc_fetch($openedKey);
+        return (bool)apc_fetch($openedKey);
     }
 
     /**

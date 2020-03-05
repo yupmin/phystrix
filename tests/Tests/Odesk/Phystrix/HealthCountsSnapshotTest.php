@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is a part of the Phystrix library
  *
@@ -16,6 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 namespace Tests\Odesk\Phystrix;
 
 use Odesk\Phystrix\HealthCountsSnapshot;
@@ -62,6 +64,6 @@ class HealthCountsSnapshotTest extends PHPUnit_Framework_TestCase
 
     public function testGetErrorPercentage()
     {
-        $this->assertEquals(66, (integer) $this->snapshot->getErrorPercentage());
+        $this->assertEquals(66, (int)$this->snapshot->getErrorPercentage());
     }
 }

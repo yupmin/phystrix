@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is a part of the Phystrix library
  *
@@ -16,13 +17,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 namespace Odesk\Phystrix;
 
 use Psr\SimpleCache\CacheInterface;
 use ReflectionClass;
 use ReflectionException;
 use Psr\Container\ContainerInterface;
-use Zend\Config\Config;
+use Laminas\Config\Config;
 
 /**
  * All commands must be created through this factory.

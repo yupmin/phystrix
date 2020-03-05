@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is a part of the Phystrix library
  *
@@ -16,6 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 namespace Odesk\Phystrix;
 
 use Odesk\Phystrix\Exception\BadRequestException;
@@ -23,7 +25,7 @@ use Odesk\Phystrix\Exception\FallbackNotAvailableException;
 use Odesk\Phystrix\Exception\RuntimeException;
 use Psr\Container\ContainerInterface;
 use Psr\SimpleCache\CacheInterface;
-use Zend\Config\Config;
+use Laminas\Config\Config;
 use Exception;
 
 /**
@@ -31,14 +33,14 @@ use Exception;
  */
 abstract class AbstractCommand
 {
-    const EVENT_SUCCESS = 'SUCCESS';
-    const EVENT_FAILURE = 'FAILURE';
-    const EVENT_TIMEOUT = 'TIMEOUT';
-    const EVENT_SHORT_CIRCUITED = 'SHORT_CIRCUITED';
-    const EVENT_FALLBACK_SUCCESS = 'FALLBACK_SUCCESS';
-    const EVENT_FALLBACK_FAILURE = 'FALLBACK_FAILURE';
-    const EVENT_EXCEPTION_THROWN = 'EXCEPTION_THROWN';
-    const EVENT_RESPONSE_FROM_CACHE = 'RESPONSE_FROM_CACHE';
+    public const EVENT_SUCCESS = 'SUCCESS';
+    public const EVENT_FAILURE = 'FAILURE';
+    public const EVENT_TIMEOUT = 'TIMEOUT';
+    public const EVENT_SHORT_CIRCUITED = 'SHORT_CIRCUITED';
+    public const EVENT_FALLBACK_SUCCESS = 'FALLBACK_SUCCESS';
+    public const EVENT_FALLBACK_FAILURE = 'FALLBACK_FAILURE';
+    public const EVENT_EXCEPTION_THROWN = 'EXCEPTION_THROWN';
+    public const EVENT_RESPONSE_FROM_CACHE = 'RESPONSE_FROM_CACHE';
 
     /**
      * Command Key, used for grouping Circuit Breakers

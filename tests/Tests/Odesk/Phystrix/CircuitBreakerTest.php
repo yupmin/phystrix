@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is a part of the Phystrix library
  *
@@ -16,6 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 namespace Tests\Odesk\Phystrix;
 
 use Odesk\Phystrix\CircuitBreaker;
@@ -40,7 +42,7 @@ class CircuitBreakerTest extends \PHPUnit_Framework_TestCase
 
     protected function getCircuitBreaker($config = array())
     {
-        $commandConfig = new \Zend\Config\Config(array(
+        $commandConfig = new \Laminas\Config\Config(array(
             'circuitBreaker' => array(
                 'enabled' => true,
                 'errorThresholdPercentage' => 50,
@@ -55,7 +57,7 @@ class CircuitBreakerTest extends \PHPUnit_Framework_TestCase
                 )
             ),
         ), true);
-        $commandConfig->merge(new \Zend\Config\Config($config, true));
+        $commandConfig->merge(new \Laminas\Config\Config($config, true));
 
         return new CircuitBreaker('TestCommand', $this->metrics, $commandConfig, $this->stateStorage);
     }

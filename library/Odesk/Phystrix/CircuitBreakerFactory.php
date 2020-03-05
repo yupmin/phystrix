@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is a part of the Phystrix library
  *
@@ -16,9 +17,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 namespace Odesk\Phystrix;
 
-use Zend\Config\Config;
+use Laminas\Config\Config;
 
 /**
  * Factory to keep track of and instantiate new circuit breakers when needed

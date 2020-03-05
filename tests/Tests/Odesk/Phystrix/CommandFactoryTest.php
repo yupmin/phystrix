@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is a part of the Phystrix library
  *
@@ -16,6 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 namespace Tests\Odesk\Phystrix;
 
 use DI\ContainerBuilder;
@@ -31,7 +33,7 @@ class CommandFactoryTest extends PHPUnit_Framework_TestCase
 {
     public function testGetCommand()
     {
-        $config = new \Zend\Config\Config(array(
+        $config = new \Laminas\Config\Config(array(
             'default' => array(
                 'fallback' => array('enabled' => true)
             )
@@ -57,7 +59,7 @@ class CommandFactoryTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('test', $command->a);
         $this->assertEquals('hello', $command->b);
         // injects the infrastructure components
-        $expectedDefaultConfig = new \Zend\Config\Config(array(
+        $expectedDefaultConfig = new \Laminas\Config\Config(array(
             'fallback' => array('enabled' => true)
         ), true);
         $this->assertAttributeEquals($expectedDefaultConfig, 'config', $command);
@@ -72,7 +74,7 @@ class CommandFactoryTest extends PHPUnit_Framework_TestCase
      */
     public function testGetCommandMergesConfig()
     {
-        $config = new \Zend\Config\Config(array(
+        $config = new \Laminas\Config\Config(array(
             'default' => array(
                 'fallback' => array('enabled' => true),
                 'customData' => 12345
@@ -97,7 +99,7 @@ class CommandFactoryTest extends PHPUnit_Framework_TestCase
         );
         /** @var FactoryCommandMock $command */
         $command = $commandFactory->getCommand('Tests\Odesk\Phystrix\FactoryCommandMock', 'test', 'hello');
-        $expectedConfig = new \Zend\Config\Config(array(
+        $expectedConfig = new \Laminas\Config\Config(array(
             'fallback' => array('enabled' => false),
             'circuitBreaker' => array('enabled' => false),
             'customData' => 12345
