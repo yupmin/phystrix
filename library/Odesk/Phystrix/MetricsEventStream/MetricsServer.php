@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is a part of the phystrix-dashboard package
  *
@@ -16,6 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 namespace Odesk\Phystrix\MetricsEventStream;
 
 /**
@@ -23,7 +25,7 @@ namespace Odesk\Phystrix\MetricsEventStream;
  */
 class MetricsServer
 {
-    const DEFAULT_DELAY = 500; // in milliseconds
+    public const DEFAULT_DELAY = 500; // in milliseconds
 
     /**
      * @var integer

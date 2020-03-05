@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is a part of the phystrix-dashboard package
  *
@@ -16,6 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 namespace Odesk\Phystrix\MetricsEventStream;
 
 use APCUIterator;

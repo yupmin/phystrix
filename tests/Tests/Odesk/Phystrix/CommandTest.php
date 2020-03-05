@@ -200,6 +200,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
      *
      * @param bool $logEnabled whether config is set to use request log
      * @throws Exception
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function testRequestLogNotInjected($logEnabled)
     {
@@ -227,6 +228,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
      *
      * @param bool $cacheEnabled whether config is set to use request log
      * @throws Exception
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function testRequestCacheNotInjected($cacheEnabled)
     {
@@ -261,6 +263,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @throws Exception
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function testExecuteRequestNotAllowed()
     {
@@ -286,6 +289,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @throws Exception
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function testExecuteRunException()
     {
@@ -341,6 +345,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @throws Exception
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function testRuntimeExceptionPopulated()
     {
@@ -362,6 +367,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @throws Exception
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function testBadRequestExceptionTracksNoMetrics()
     {
@@ -386,6 +392,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @throws Exception
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function testShortCircuitedExceptionMessage()
     {
@@ -445,11 +452,11 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         $requestCache = $this->createMock('Odesk\Phystrix\RequestCache');
         $requestCache->expects($this->once())
             ->method('has')
-            ->with('Tests.Odesk.Phystrix.CommandMock'.'.'.'test-cache-key')
+            ->with('Tests.Odesk.Phystrix.CommandMock' . '.' . 'test-cache-key')
             ->will($this->returnValue(true));
         $requestCache->expects($this->once())
             ->method('get')
-            ->with('Tests.Odesk.Phystrix.CommandMock'.'.'.'test-cache-key')
+            ->with('Tests.Odesk.Phystrix.CommandMock' . '.' . 'test-cache-key')
             ->will($this->returnValue('result from cache'));
         $this->command->cacheKey = 'test-cache-key';
         $this->command->setRequestCache($requestCache);
@@ -471,13 +478,13 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         $requestCache = $this->createMock('Odesk\Phystrix\RequestCache');
         $requestCache->expects($this->once())
             ->method('has')
-            ->with('Tests.Odesk.Phystrix.CommandMock'.'.'.'test-cache-key')
+            ->with('Tests.Odesk.Phystrix.CommandMock' . '.' . 'test-cache-key')
             ->will($this->returnValue(false));
         $requestCache->expects($this->never())
             ->method('get');
         $requestCache->expects($this->once())
             ->method('set')
-            ->with('Tests.Odesk.Phystrix.CommandMock'.'.'.'test-cache-key', 'run result');
+            ->with('Tests.Odesk.Phystrix.CommandMock' . '.' . 'test-cache-key', 'run result');
         $this->command->cacheKey = 'test-cache-key';
         $this->command->setRequestCache($requestCache);
         $this->commandMetrics->expects($this->never())->method('markResponseFromCache');
@@ -496,7 +503,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         $requestCache = $this->createMock('Odesk\Phystrix\RequestCache');
         $requestCache->expects($this->once())
             ->method('set')
-            ->with('Tests.Odesk.Phystrix.CommandMock'.'.'.'test-cache-key', 'run result');
+            ->with('Tests.Odesk.Phystrix.CommandMock' . '.' . 'test-cache-key', 'run result');
         $this->command->cacheKey = 'test-cache-key';
         $this->command->setRequestCache($requestCache);
         $this->assertEquals('run result', $this->command->execute());

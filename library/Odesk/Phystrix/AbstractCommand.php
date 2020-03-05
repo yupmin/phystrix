@@ -231,11 +231,11 @@ abstract class AbstractCommand
 
         // trying from cache first
         if ($cacheEnabled) {
-            $cacheHit = $this->requestCache->has($this->getCommandKey().'.'.$this->getCacheKey());
+            $cacheHit = $this->requestCache->has($this->getCommandKey() . '.' . $this->getCacheKey());
             if ($cacheHit) {
                 $metrics->markResponseFromCache();
                 $this->recordExecutionEvent(self::EVENT_RESPONSE_FROM_CACHE);
-                return $this->requestCache->get($this->getCommandKey().'.'.$this->getCacheKey());
+                return $this->requestCache->get($this->getCommandKey() . '.' . $this->getCacheKey());
             }
         }
         $circuitBreaker = $this->getCircuitBreaker();
@@ -265,7 +265,7 @@ abstract class AbstractCommand
 
         // putting the result into cache
         if ($cacheEnabled) {
-            $this->requestCache->set($this->getCommandKey().'.'.$this->getCacheKey(), $result);
+            $this->requestCache->set($this->getCommandKey() . '.' . $this->getCacheKey(), $result);
         }
 
         return $result;

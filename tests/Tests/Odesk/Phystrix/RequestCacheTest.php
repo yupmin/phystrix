@@ -38,34 +38,34 @@ class RequestCacheTest extends PHPUnit_Framework_TestCase
     public function testGetAndPut()
     {
         $result = (object) array('a' => 123);
-        $this->assertNull($this->requestCache->get('TestCommand'.'cache-key-123'));
-        $this->requestCache->set('TestCommand'.'cache-key-123', $result);
-        $this->assertEquals($result, $this->requestCache->get('TestCommand'.'cache-key-123'));
+        $this->assertNull($this->requestCache->get('TestCommand' . 'cache-key-123'));
+        $this->requestCache->set('TestCommand' . 'cache-key-123', $result);
+        $this->assertEquals($result, $this->requestCache->get('TestCommand' . 'cache-key-123'));
     }
 
     public function testClear()
     {
         $result = (object) array('a' => 123);
-        $this->requestCache->set('TestCommand'.'cache-key-123', $result);
-        $this->assertEquals($result, $this->requestCache->get('TestCommand'.'cache-key-123'));
+        $this->requestCache->set('TestCommand' . 'cache-key-123', $result);
+        $this->assertEquals($result, $this->requestCache->get('TestCommand' . 'cache-key-123'));
         $this->requestCache->clear();
-        $this->assertNull($this->requestCache->get('TestCommand'.'cache-key-123'));
+        $this->assertNull($this->requestCache->get('TestCommand' . 'cache-key-123'));
     }
 
     public function testClearAll()
     {
         $result = (object) array('a' => 123);
-        $this->requestCache->set('TestCommand'.'cache-key-123', $result);
-        $this->assertEquals($result, $this->requestCache->get('TestCommand'.'cache-key-123'));
+        $this->requestCache->set('TestCommand' . 'cache-key-123', $result);
+        $this->assertEquals($result, $this->requestCache->get('TestCommand' . 'cache-key-123'));
         $this->requestCache->clear();
-        $this->assertNull($this->requestCache->get('TestCommand'.'cache-key-123'));
+        $this->assertNull($this->requestCache->get('TestCommand' . 'cache-key-123'));
     }
 
     public function testExists()
     {
         $result = (object) array('a' => 123);
-        $this->assertFalse($this->requestCache->has('TestCommand'.'cache-key-123'));
-        $this->requestCache->set('TestCommand'.'cache-key-123', $result);
-        $this->assertTrue($this->requestCache->has('TestCommand'.'cache-key-123'));
+        $this->assertFalse($this->requestCache->has('TestCommand' . 'cache-key-123'));
+        $this->requestCache->set('TestCommand' . 'cache-key-123', $result);
+        $this->assertTrue($this->requestCache->has('TestCommand' . 'cache-key-123'));
     }
 }
