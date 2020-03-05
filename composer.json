@@ -13,7 +13,9 @@
     },
     "require": {
         "php": ">=7.1",
+        "ext-json": "*",
         "psr/container": "^1.0",
+        "psr/simple-cache": "^1.0",
         "laminas/laminas-config": "^3.3"
     },
     "require-dev": {
@@ -23,7 +25,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.0-dev"
+            "dev-master": "4.0-dev"
         }
     }
 }
